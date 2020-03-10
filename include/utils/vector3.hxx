@@ -21,7 +21,7 @@ namespace Utils
         , z(_v.z)
     {}
 
-    inline Vector3 Vector3::operator+(const float& f) const
+    inline Vector3 Vector3::operator+(float f) const
     {
         return Vector3(x + f, y + f, z + f);
     }
@@ -31,7 +31,7 @@ namespace Utils
         return Vector3(x + v.x, y + v.y, z + v.z);
     }
 
-    inline Vector3& Vector3::operator+=(const float& f)
+    inline Vector3& Vector3::operator+=(float f)
     {
         x += f;
         y += f;
@@ -47,7 +47,7 @@ namespace Utils
         return *this;
     }
 
-    inline Vector3 Vector3::operator-(const float& f) const
+    inline Vector3 Vector3::operator-(float f) const
     {
         return Vector3(x - f, y - f, z - f);
     }
@@ -57,7 +57,7 @@ namespace Utils
         return Vector3(x - v.x, y - v.y, z - v.z);
     }
 
-    inline Vector3& Vector3::operator-=(const float& f)
+    inline Vector3& Vector3::operator-=(float f)
     {
         x -= f;
         y -= f;
@@ -73,7 +73,7 @@ namespace Utils
         return *this;
     }
 
-    inline Vector3 Vector3::operator*(const float& f) const
+    inline Vector3 Vector3::operator*(float f) const
     {
         return Vector3(x * f, y * f, z * f);
     }
@@ -83,7 +83,7 @@ namespace Utils
         return Vector3(x * v.x, y * v.y, z * v.z);
     }
 
-    inline Vector3& Vector3::operator*=(const float& f)
+    inline Vector3& Vector3::operator*=(float f)
     {
         x *= f;
         y *= f;
@@ -99,7 +99,7 @@ namespace Utils
         return *this;
     }
 
-    inline Vector3 Vector3::operator/(const float& f) const
+    inline Vector3 Vector3::operator/(float f) const
     {
         return Vector3(x / f, y / f, z / f);
     }
@@ -109,7 +109,7 @@ namespace Utils
         return Vector3(x / v.x, y / v.y, z / v.z);
     }
 
-    inline Vector3& Vector3::operator/=(const float& f)
+    inline Vector3& Vector3::operator/=(float f)
     {
         x /= f;
         y /= f;
