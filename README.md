@@ -3,7 +3,7 @@ Meshimator
 
 Small mesh decimator project for image synthesis class
 
-##Usage
+## Usage
 
 ```
 mkdir build
