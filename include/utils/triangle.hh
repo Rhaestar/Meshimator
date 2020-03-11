@@ -10,12 +10,14 @@ namespace Utils
             : a(0)
             , b(0)
             , c(0)
+            , deleted(false)
         {}
 
         Triangle(uint32_t a_, uint32_t b_, uint32_t c_)
             : a(a_)
             , b(b_)
             , c(c_)
+            , deleted(false)
         {}
 
         Triangle  operator+(uint32_t u)
@@ -34,6 +36,7 @@ namespace Utils
         uint32_t a;
         uint32_t b;
         uint32_t c;
+        bool     deleted;
 
         friend std::ostream& operator<<(std::ostream& o, const Triangle& t);
     };
