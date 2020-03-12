@@ -33,6 +33,15 @@ void parse_obj(char* file, std::vector<Utils::Vector4>& vertices,
         exit(1);
     }
 
+    for (size_t i = 0; i < attrib.vertices.size(); i += 3)
+    {
+        Utils::Vector4 v;
+        v.x = attrib.vertices[i + 0];
+        v.y = attrib.vertices[i + 1];
+        v.z = attrib.vertices[i + 2];
+        vertices.push_back(v);
+    }
+
     //TODO: assuming 1 shape for now
     for (size_t s = 0; s < shapes.size(); s++)
     {
@@ -41,20 +50,12 @@ void parse_obj(char* file, std::vector<Utils::Vector4>& vertices,
         {
             size_t fv = shapes[s].mesh.num_face_vertices[f];
             //We assume that we have only triangles
-            for (size_t v = 0; v < fv; v++) {
-                tinyobj::index_t idx = shapes[s].mesh.indices[index_offset + v];
-                tinyobj::real_t vx = attrib.vertices[3*idx.vertex_index+0];
-                tinyobj::real_t vy = attrib.vertices[3*idx.vertex_index+1];
-                tinyobj::real_t vz = attrib.vertices[3*idx.vertex_index+2];
+            Utils::Triangle t;
 
-                Utils::Vector4  vertex{vx, vy, vz};
-                vertices.push_back(vertex);
-            }
-
-            uint32_t idx = vertices.size();
-
-            Utils::Triangle triangle{idx - 1, idx - 2, idx - 3};
-            indexes.push_back(triangle);
+            t.a = shapes[s].mesh.indices[index_offset + 0].vertex_index;
+            t.b = shapes[s].mesh.indices[index_offset + 1].vertex_index;
+            t.c = shapes[s].mesh.indices[index_offset + 2].vertex_index;
+            indexes.push_back(t);
 
             index_offset += fv;
         }
