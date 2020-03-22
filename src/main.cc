@@ -102,5 +102,8 @@ int main(int argc, char* argv[])
 
     write_obj(argv[2], vertices, indexes);
 
+    for (Utils::Vertex& v : vertices)
+        std::cout << v;
+
     return 0;
 }
