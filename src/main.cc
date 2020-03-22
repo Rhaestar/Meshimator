@@ -3,12 +3,14 @@
 
 #include "vector4.hh"
 #include "triangle.hh"
+#include "vertex.hh"
+#include "simplify.hh"
 #include <iostream>
 #include <vector>
 
 
 //TODO Proper parser
-void parse_obj(char* file, std::vector<Utils::Vector4>& vertices,
+void parse_obj(char* file, std::vector<Utils::Vertex>& vertices,
         std::vector<Utils::Triangle>& indexes)
 {
     tinyobj::attrib_t attrib;
@@ -39,7 +41,8 @@ void parse_obj(char* file, std::vector<Utils::Vector4>& vertices,
         v.x = attrib.vertices[i + 0];
         v.y = attrib.vertices[i + 1];
         v.z = attrib.vertices[i + 2];
-        vertices.push_back(v);
+        Utils::Vertex vertex(v);
+        vertices.push_back(vertex);
     }
 
     //TODO: assuming 1 shape for now
@@ -55,11 +58,30 @@ void parse_obj(char* file, std::vector<Utils::Vector4>& vertices,
             t.a = shapes[s].mesh.indices[index_offset + 0].vertex_index;
             t.b = shapes[s].mesh.indices[index_offset + 1].vertex_index;
             t.c = shapes[s].mesh.indices[index_offset + 2].vertex_index;
+            vertices[t.a].AddTriangle(&t);
+            vertices[t.b].AddTriangle(&t);
+            vertices[t.c].AddTriangle(&t);
             indexes.push_back(t);
 
             index_offset += fv;
         }
     }
+}
+
+void write_obj(char* file, std::vector<Utils::Vertex>& vertices,
+        std::vector<Utils::Triangle>& indexes)
+{
+    std::ofstream out;
+    out.open(file);
+
+    out << "# " << file << "\n\n";
+    out << "o shape\n\n";
+    for (Utils::Vertex& v : vertices)
+        out << "v " << v.GetPos() << "\n";
+    out << "\n";
+    for (Utils::Triangle& t : indexes)
+        out << "f " << t << "\n";
+    out.close();
 }
 
 int main(int argc, char* argv[])
@@ -71,13 +93,14 @@ int main(int argc, char* argv[])
         return 1;
     }
 
-    std::vector<Utils::Vector4> vertices;
+    std::vector<Utils::Vertex> vertices;
     std::vector<Utils::Triangle> indexes;
+
     parse_obj(argv[1], vertices, indexes);
-    for (size_t i = 0; i < indexes.size(); ++i)
-    {
-        std::cout << vertices[indexes[i].a]
-                  << vertices[indexes[i].b] << vertices[indexes[i].c] << "\n";
-    }
+
+    simplify(vertices, indexes, 3);
+
+    write_obj(argv[2], vertices, indexes);
+
     return 0;
 }

@@ -1,6 +1,9 @@
 add_subdirectory(utils/)
 
-add_executable(meshimator main.cc)
+add_executable(meshimator
+    simplify.cc
+    main.cc)
+
 target_link_libraries(meshimator
     PRIVATE utils)
 
