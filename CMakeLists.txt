@@ -4,7 +4,7 @@ project(Meshimator
     VERSION 1.0
     LANGUAGES CXX)
 
-#add vectoriise
-add_compile_options(-Wall -Wextra -Werror -std=c++17 -O3 -pedantic -fopenmp)
+#add vectorise/O3/OFast
+add_compile_options(-Wall -Wextra -Werror -std=c++17 -g -pedantic)
 
 add_subdirectory(src/)

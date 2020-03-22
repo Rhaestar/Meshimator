@@ -35,20 +35,23 @@ void parse_obj(char* file, std::vector<Utils::Vertex>& vertices,
         exit(1);
     }
 
+    vertices.reserve(attrib.vertices.size() / 3);
     for (size_t i = 0; i < attrib.vertices.size(); i += 3)
     {
         Utils::Vector4 v;
         v.x = attrib.vertices[i + 0];
         v.y = attrib.vertices[i + 1];
         v.z = attrib.vertices[i + 2];
+        v.h = 1.f;
         Utils::Vertex vertex(v);
         vertices.push_back(vertex);
-    }
+     }
 
     //TODO: assuming 1 shape for now
     for (size_t s = 0; s < shapes.size(); s++)
     {
         size_t index_offset = 0;
+        indexes.reserve(shapes[s].mesh.num_face_vertices.size());
         for (size_t f = 0, fEnd = shapes[s].mesh.num_face_vertices.size(); f < fEnd; f++)
         {
             size_t fv = shapes[s].mesh.num_face_vertices[f];
@@ -58,10 +61,11 @@ void parse_obj(char* file, std::vector<Utils::Vertex>& vertices,
             t.a = shapes[s].mesh.indices[index_offset + 0].vertex_index;
             t.b = shapes[s].mesh.indices[index_offset + 1].vertex_index;
             t.c = shapes[s].mesh.indices[index_offset + 2].vertex_index;
-            vertices[t.a].AddTriangle(&t);
-            vertices[t.b].AddTriangle(&t);
-            vertices[t.c].AddTriangle(&t);
             indexes.push_back(t);
+            Utils::Triangle& inserted = indexes[indexes.size() - 1];
+            vertices[t.a].AddTriangle(&inserted);
+            vertices[t.b].AddTriangle(&inserted);
+            vertices[t.c].AddTriangle(&inserted);
 
             index_offset += fv;
         }

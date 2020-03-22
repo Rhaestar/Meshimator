@@ -15,8 +15,12 @@ namespace Utils
             float b = n.y;
             float c = n.z;
 
-            float d = -a - b - c;
+            float d = -a * pos_.x - b * pos_.y - c * pos_.z;
             SymMat K(a, b, c, d);
+            std::cout << a << " " << b << " " << c << " " << d << "\n";
+            std::cout << vertices[t->a].GetPos() << "\n";
+            std::cout << vertices[t->b].GetPos() << "\n";
+            std::cout << vertices[t->c].GetPos() << "\n";
             Q_ += K;
         }
     }

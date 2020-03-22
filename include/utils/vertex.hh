@@ -17,8 +17,14 @@ namespace Utils
             , deleted_(false)
             , Q_()
         {}
+
+        /*Vertex(const Vertex& v)
+            : pos_(v.pos_)
+            , deleted_(false)
+            , Q_()
+        {}*/
         
-        Vector4& GetPos() { return pos_; }
+        Vector4 GetPos() { return pos_; }
         bool IsDeleted() { return deleted_; }
 
         void FillQ(std::vector<Vertex>& vertices);
