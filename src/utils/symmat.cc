@@ -7,8 +7,8 @@ namespace Utils
     {
         o << std::setw(5) << m.mat_[0]
             << std::setw(5) << m.mat_[1]
-            << std::setw(5) << m.mat_[3]
-            << std::setw(5) << m.mat_[4] << "\n";
+            << std::setw(5) << m.mat_[2]
+            << std::setw(5) << m.mat_[3] << "\n";
         o << std::setw(5) << m.mat_[1]
             << std::setw(5) << m.mat_[4]
             << std::setw(5) << m.mat_[5]
