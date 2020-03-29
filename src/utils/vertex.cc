@@ -31,9 +31,22 @@ namespace Utils
             trefs_.push_back(ref);
     }
 
+    void Vertex::AddPair(VertexPair* ref)
+    {
+        prefs_.push_back(ref);
+    }
+
     std::ostream& operator<<(std::ostream& out, const Vertex& v)
     {
         out << v.pos_ << "\n";
         return out << v.Q_;
+    }
+
+    bool Vertex::CheckPair(const Vertex& v)
+    {
+        for (auto vp : prefs_)
+            if (*(vp->GetFirst()) == v || *(vp->GetSecond()) == v)
+                return true;
+        return false;
     }
 }
