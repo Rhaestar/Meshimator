@@ -43,7 +43,7 @@ void parse_obj(char* file, std::vector<Utils::Vertex>& vertices,
         v.y = attrib.vertices[i + 1];
         v.z = attrib.vertices[i + 2];
         v.h = 1.f;
-        Utils::Vertex vertex(v);
+        Utils::Vertex vertex(v, vertices.size());
         vertices.push_back(vertex);
      }
 
