@@ -45,12 +45,14 @@ void ContractPair(std::vector<Utils::Triangle>& indexes, Utils::Heap& h)
         t.Remove(v1, v2); 
     }
 
-    for (auto p : h.vect)
+    for (size_t i = 0; i < h.vect.size(); i++)
     {
-        p->Replace(v1, v2);
+        auto p = h.vect[i];
+        
+        if (p->Replace(v1, v2))
+            h.Update(i);
     }
 
-    h.Update(h.vect.size() - 1);
     v2->Delete();
 }
 

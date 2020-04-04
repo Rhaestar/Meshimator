@@ -20,7 +20,7 @@ namespace Utils
         Vertex* GetSecond() { return v2_; }
         void SetInvalid() { cost_cached = false; }
 
-        void Replace(Vertex* v, Vertex* new_v);
+        bool Replace(Vertex* v, Vertex* new_v);
         float GetCost();
         Vector4& GetOptimalVertex();
 

@@ -3,17 +3,21 @@
 
 namespace Utils
 {
-    void VertexPair::Replace(Utils::Vertex* v, Utils::Vertex* new_v)
+    bool VertexPair::Replace(Utils::Vertex* v, Utils::Vertex* new_v)
     {
         if (*v == *v1_)
         {
             v1_ = new_v;
+            return true;
         }
 
         if (*v == *v2_)
         {
             v2_ = new_v;
+            return true;
         }
+
+        return false;
     }
 
     float VertexPair::GetCost()
