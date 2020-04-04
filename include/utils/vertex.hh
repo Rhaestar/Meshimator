@@ -33,6 +33,7 @@ namespace Utils
         SymMat GetMat() { return Q_; }
         size_t GetIndex() { return index_; }
 
+        void Delete();
         void FillQ(std::vector<Vertex>& vertices);
         void AddTriangle(Triangle* ref);
         void AddPair(VertexPair* ref);

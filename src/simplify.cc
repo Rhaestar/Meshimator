@@ -17,25 +17,45 @@ Utils::VertexPair* MakePair(Utils::Vertex& v1, Utils::Vertex& v2)
 void CreatePair(std::vector<Utils::Vertex>& vertices,
         Utils::Triangle& index, Utils::Heap& pairs)
 {
-        Utils::Vertex& a = vertices[index.a];
-        Utils::Vertex& b = vertices[index.b];
-        Utils::Vertex& c = vertices[index.c];
+    Utils::Vertex& a = vertices[index.a];
+    Utils::Vertex& b = vertices[index.b];
+    Utils::Vertex& c = vertices[index.c];
 
-        Utils::VertexPair* ab = MakePair(a, b);
-        Utils::VertexPair* ac = MakePair(a, c);
-        Utils::VertexPair* bc = MakePair(b, c);
+    Utils::VertexPair* ab = MakePair(a, b);
+    Utils::VertexPair* ac = MakePair(a, c);
+    Utils::VertexPair* bc = MakePair(b, c);
 
-        if (ab != nullptr)
-            pairs.Insert(ab);
-        if (ac != nullptr)
-            pairs.Insert(ac);
-        if (bc != nullptr)
-            pairs.Insert(bc);
+    if (ab != nullptr)
+        pairs.Insert(ab);
+    if (ac != nullptr)
+        pairs.Insert(ac);
+    if (bc != nullptr)
+        pairs.Insert(bc);
 
 }
 
+void ContractPair(std::vector<Utils::Triangle>& indexes, Utils::Heap& h)
+{
+    Utils::VertexPair* vp = h.Pop();
+    Utils::Vertex* v1 = vp->GetFirst();
+    Utils::Vertex* v2 = vp->GetSecond();
+
+    for (Utils::Triangle& t : indexes)
+    {
+        t.Remove(v1, v2); 
+    }
+
+    for (auto p : h.vect)
+    {
+        p->Replace(v1, v2);
+    }
+
+    h.Update(h.vect.size() - 1);
+    v2->Delete();
+}
+
 void simplify(std::vector<Utils::Vertex>& vertices,
-        std::vector<Utils::Triangle>& indexes, size_t /*target*/)
+        std::vector<Utils::Triangle>& indexes, size_t target)
 {
     for (Utils::Vertex& v : vertices)
         v.FillQ(vertices);
@@ -49,6 +69,17 @@ void simplify(std::vector<Utils::Vertex>& vertices,
     {
         std::cout << *(vp->GetFirst()) << "\n" << *(vp->GetSecond()) << "\na\n";
     }
-    //TODO Main Loop
 
+    while (indexes.size() > target) {
+        ContractPair(indexes, h);
+
+        for (auto i = indexes.begin(); i < indexes.end(); i++)
+        {
+            if ((*i).deleted)
+            {
+                indexes.erase(i);
+                i--;
+            }
+        }
+    }
 }

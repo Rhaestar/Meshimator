@@ -5,6 +5,8 @@
 
 namespace Utils
 {
+    class Vertex;
+
     //Triangle struct mainly used as indexes for meshes
     struct Triangle
     {
@@ -21,6 +23,8 @@ namespace Utils
             , c(c_)
             , deleted(false)
         {}
+
+        void Remove(Utils::Vertex* v, Utils::Vertex* new_v);
 
         Triangle  operator+(uint32_t u)
         {

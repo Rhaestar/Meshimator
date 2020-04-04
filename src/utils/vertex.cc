@@ -3,6 +3,8 @@
 
 namespace Utils
 {
+    void Vertex::Delete() { deleted_ = true; }
+
     void Vertex::FillQ(std::vector<Vertex>& vertices)
     {
         for (Triangle* t: trefs_)
