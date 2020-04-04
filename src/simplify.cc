@@ -53,6 +53,7 @@ void ContractPair(std::vector<Utils::Triangle>& indexes, Utils::Heap& h)
             h.Update(i);
     }
 
+    delete vp;
     v2->Delete();
 }
 
