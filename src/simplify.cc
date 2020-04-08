@@ -73,16 +73,15 @@ void simplify(std::vector<Utils::Vertex>& vertices,
         std::cout << *(vp->GetFirst()) << "\n" << *(vp->GetSecond()) << "\na\n";
     }
 
-    while (indexes.size() > target) {
+    size_t del_count = 0;
+    while (indexes.size() - del_count > target) {
         ContractPair(indexes, h);
 
+        del_count = 0;
         for (auto i = indexes.begin(); i < indexes.end(); i++)
         {
             if ((*i).deleted)
-            {
-                indexes.erase(i);
-                i--;
-            }
+                del_count++;
         }
     }
 }

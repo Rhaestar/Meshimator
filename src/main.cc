@@ -84,6 +84,7 @@ void write_obj(char* file, std::vector<Utils::Vertex>& vertices,
         out << "v " << v.GetPos() << "\n";
     out << "\n";
     for (Utils::Triangle& t : indexes)
+        if (!t.deleted)
         out << "f " << t << "\n";
     out.close();
 }
@@ -102,7 +103,7 @@ int main(int argc, char* argv[])
 
     parse_obj(argv[1], vertices, indexes);
 
-    simplify(vertices, indexes, 3);
+    simplify(vertices, indexes, 5);
 
     write_obj(argv[2], vertices, indexes);
 
