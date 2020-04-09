@@ -92,9 +92,9 @@ void write_obj(char* file, std::vector<Utils::Vertex>& vertices,
 int main(int argc, char* argv[])
 {
     //TODO: Add Positional arguments to define target
-    if (argc != 3)
+    if (argc != 4)
     {
-        std::cerr << "USAGE: ./meshimator input_file output_file\n";
+        std::cerr << "USAGE: ./meshimator input_file output_file target\n";
         return 1;
     }
 
@@ -103,7 +103,7 @@ int main(int argc, char* argv[])
 
     parse_obj(argv[1], vertices, indexes);
 
-    simplify(vertices, indexes, 5);
+    simplify(vertices, indexes, std::stoi(argv[3]));
 
     write_obj(argv[2], vertices, indexes);
 
