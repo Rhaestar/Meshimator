@@ -3,7 +3,7 @@
 
 namespace Utils
 {
-    void Triangle::Remove(Utils::Vertex* v, Utils::Vertex* new_v)
+    bool Triangle::Remove(Utils::Vertex* new_v, Utils::Vertex* v)
     {
         size_t v_index = v->GetIndex();
         size_t new_index = new_v->GetIndex();
@@ -29,8 +29,10 @@ namespace Utils
             if (new_index == a || new_index == b)
                 deleted = true;
             else
-                c = new_v->GetIndex();
+                c = new_index;
         }
+
+        return deleted;
     }
 
     std::ostream& operator <<(std::ostream& o, const Triangle& t)

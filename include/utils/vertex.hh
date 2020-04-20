@@ -28,16 +28,20 @@ namespace Utils
             , Q_()
         {}*/
         
-        Vector4& GetPos() { return pos_; }
+        const Vector4& GetPos() { return pos_; }
+        void SetPos(const Vector4& pos) { pos_ = pos; }
         bool IsDeleted() { return deleted_; }
         SymMat GetMat() { return Q_; }
         size_t GetIndex() { return index_; }
+        std::vector<Triangle*>& GetTriangles() { return trefs_; }
+        std::vector<VertexPair*>&   GetPairs()     { return prefs_; }
 
-        void Delete();
         void FillQ(std::vector<Vertex>& vertices);
         void AddTriangle(Triangle* ref);
         void AddPair(VertexPair* ref);
         bool CheckPair(const Vertex& v);
+
+        size_t ReplaceBy(Vertex* v);
 
         bool operator==(const Vertex& v) { return index_ == v.index_; }
         bool operator!=(const Vertex& v) { return index_ != v.index_; }

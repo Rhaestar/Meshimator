@@ -13,6 +13,7 @@ namespace Utils
         void Insert(VertexPair* vp);
         VertexPair* Pop();
         void Update(size_t index);
+        void Print();
 
         std::vector<VertexPair*> vect;
     private:

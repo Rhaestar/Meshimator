@@ -3,7 +3,24 @@
 
 namespace Utils
 {
-    void Vertex::Delete() { deleted_ = true; }
+    size_t Vertex::ReplaceBy(Vertex* v)
+    {
+        deleted_ = true;
+        size_t deleted_triangles = 0;
+
+        for (auto pt : trefs_)
+        {
+            if (pt->deleted)
+                continue;
+            if (pt->Remove(v, this))
+                deleted_triangles++;
+            else
+                v->AddTriangle(pt);
+        }
+        v->Q_ += Q_;
+
+        return deleted_triangles;
+    }
 
     void Vertex::FillQ(std::vector<Vertex>& vertices)
     {
@@ -12,6 +29,7 @@ namespace Utils
             Vector4 ab = vertices[t->b].GetPos() - vertices[t->a].GetPos();
             Vector4 ac = vertices[t->c].GetPos() - vertices[t->a].GetPos();
             Vector4 n = ab ^ ac;
+            n.normalize();
 
             float a = n.x;
             float b = n.y;
@@ -19,10 +37,6 @@ namespace Utils
 
             float d = -a * pos_.x - b * pos_.y - c * pos_.z;
             SymMat K(a, b, c, d);
-            std::cout << a << " " << b << " " << c << " " << d << "\n";
-            std::cout << vertices[t->a].GetPos() << "\n";
-            std::cout << vertices[t->b].GetPos() << "\n";
-            std::cout << vertices[t->c].GetPos() << "\n";
             Q_ += K;
         }
     }
@@ -40,8 +54,9 @@ namespace Utils
 
     std::ostream& operator<<(std::ostream& out, const Vertex& v)
     {
+        out << "index " << v.index_ << "\n";
         out << v.pos_ << "\n";
-        return out << v.Q_;
+        return out;
     }
 
     bool Vertex::CheckPair(const Vertex& v)

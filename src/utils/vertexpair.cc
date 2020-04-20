@@ -3,8 +3,9 @@
 
 namespace Utils
 {
-    bool VertexPair::Replace(Utils::Vertex* v, Utils::Vertex* new_v)
+    bool VertexPair::Replace(Utils::Vertex* new_v, Utils::Vertex* v)
     {
+        cost_cached = false;
         if (*v == *v1_)
         {
             v1_ = new_v;
@@ -42,9 +43,44 @@ namespace Utils
             return;
 
         cost_cached = true;
-        Vector4& final_vertex = v1_->GetPos();
-        optimal_vertex = final_vertex;
+
         SymMat sum = v1_->GetMat() + v2_->GetMat();
-        optimal_cost = (final_vertex * sum).dot(final_vertex);
+        float inv[16];
+        if (sum.GetInverse(inv))
+        {
+            optimal_vertex.x = inv[3];
+            optimal_vertex.y = inv[7];
+            optimal_vertex.z = inv[11];
+            optimal_vertex.h = inv[15];
+            Vector4 temp = (optimal_vertex * sum);
+            optimal_cost = optimal_vertex.dot(temp);
+
+            return;
+        }
+
+        const Vector4& test_vertex1 = v1_->GetPos();
+        const Vector4& test_vertex2 = v2_->GetPos();
+        const Vector4& test_vertex3 = (v1_->GetPos() + v2_->GetPos()) / 2.f;
+
+
+        float test_cost1 = ((test_vertex1 * sum).dot(test_vertex1));
+        float test_cost2 = ((test_vertex2 * sum).dot(test_vertex2));
+        float test_cost3 = ((test_vertex3 * sum).dot(test_vertex3));
+
+        if (test_cost1 < test_cost2 && test_cost1 < test_cost3)
+        {
+            optimal_vertex = test_vertex1;
+            optimal_cost = test_cost1;
+        }
+        else if (test_cost2 < test_cost3)
+        {
+            optimal_vertex = test_vertex2;
+            optimal_cost = test_cost2;
+        }
+        else
+        {
+            optimal_vertex = test_vertex3;
+            optimal_cost = test_cost3;
+        }
     }
 }

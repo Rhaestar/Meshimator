@@ -69,6 +69,7 @@ void parse_obj(char* file, std::vector<Utils::Vertex>& vertices,
 
             index_offset += fv;
         }
+        std::cout << indexes.size() << "\n";
     }
 }
 
@@ -81,11 +82,12 @@ void write_obj(char* file, std::vector<Utils::Vertex>& vertices,
     out << "# " << file << "\n\n";
     out << "o shape\n\n";
     for (Utils::Vertex& v : vertices)
-        out << "v " << v.GetPos() << "\n";
+        //if (!v.IsDeleted())
+            out << "v " << v.GetPos() << "\n";
     out << "\n";
     for (Utils::Triangle& t : indexes)
         if (!t.deleted)
-        out << "f " << t << "\n";
+            out << "f " << t << "\n";
     out.close();
 }
 
@@ -106,9 +108,6 @@ int main(int argc, char* argv[])
     simplify(vertices, indexes, std::stoi(argv[3]));
 
     write_obj(argv[2], vertices, indexes);
-
-    for (Utils::Vertex& v : vertices)
-        std::cout << v;
 
     return 0;
 }

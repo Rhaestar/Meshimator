@@ -164,7 +164,7 @@ namespace Utils
 
     inline float Vector4::dot(const Vector4& v) const
     {
-        return x * v.x + y * v.y + z * v.z;
+        return x * v.x + y * v.y + z * v.z + h * v.h;
     }
 
     inline Vector4 Vector4::cross(const Vector4& v) const

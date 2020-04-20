@@ -24,7 +24,7 @@ namespace Utils
             , deleted(false)
         {}
 
-        void Remove(Utils::Vertex* v, Utils::Vertex* new_v);
+        bool Remove(Utils::Vertex* new_v, Utils::Vertex* v);
 
         Triangle  operator+(uint32_t u)
         {

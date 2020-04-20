@@ -39,9 +39,7 @@ namespace Utils
             float costup = vect[indexup]->GetCost();
             if (cost < costup)
             {
-                VertexPair* temp = vect[index];
-                vect[index] = vect[indexup];
-                vect[indexup] = temp;
+                std::swap(vect[index], vect[indexup]);
                 index = indexup;
             }
             else
@@ -53,33 +51,37 @@ namespace Utils
     size_t Heap::UpdateDown(size_t index)
     {
         size_t size = vect.size();
-        while (index * 2 < size)
+        while (index * 2 + 1 < size)
         {
             float cost = vect[index]->GetCost();
-            float costup1 = vect[index * 2]->GetCost();
-            if (costup1 < cost)
+            size_t indexdown = index * 2 + 1;
+            float costdown = vect[indexdown]->GetCost();
+            if (indexdown + 1 < size)
             {
-                VertexPair* temp = vect[index];
-                vect[index] = vect[index * 2];
-                vect[index * 2] = temp;
-                index = index * 2;
-            }
-            else if (index * 2 + 1 < size)
-            {
-                float costup2 = vect[index * 2 + 1]->GetCost();
-                if (costup2 < cost)
+                float costalt = vect[indexdown + 1]->GetCost();
+                if (costalt < costdown)
                 {
-                    VertexPair* temp = vect[index];
-                    vect[index] = vect[index * 2 + 1];
-                    vect[index * 2 + 1] = temp;
-                    index = index * 2 + 1;
+                    indexdown += 1;
+                    costdown = costalt;
                 }
-                else
-                    break;
+            }
+            if (costdown < cost)
+            {
+                std::swap(vect[index], vect[indexdown]);
+                index = indexdown;
             }
             else
                 break;
         }
         return index;
+    }
+
+    void Heap::Print()
+    {
+        for (auto i : vect)
+        {
+            std::cout << "(" << i->GetFirst()->GetIndex() << ", " << i->GetSecond()->GetIndex() << ") ";
+        }
+        std::cout << "\n";
     }
 }

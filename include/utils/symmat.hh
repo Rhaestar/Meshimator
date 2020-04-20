@@ -6,10 +6,10 @@ namespace Utils
 {
     /* Half 4x4 Symmetric Matrix
      * indexes:
-     * 0 1 2 3
-     * 1 4 5 6
-     * 2 5 7 8
-     * 3 6 8 9
+     * 0 1 2 3  0  1  2  3
+     * 1 4 5 6  4  5  6  7
+     * 2 5 7 8  8  9  10 11
+     * 3 6 8 9  12 13 14 15
     */
     class SymMat
     {
@@ -76,6 +76,8 @@ namespace Utils
             }
 
             friend std::ostream& operator<<(std::ostream& o, const SymMat& m);
+
+            bool GetInverse(float inv[16]);
 
         private:
             float mat_[10];
