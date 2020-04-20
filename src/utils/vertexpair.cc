@@ -5,16 +5,17 @@ namespace Utils
 {
     bool VertexPair::Replace(Utils::Vertex* new_v, Utils::Vertex* v)
     {
-        cost_cached = false;
         if (*v == *v1_)
         {
             v1_ = new_v;
+            cost_cached = false;
             return true;
         }
 
         if (*v == *v2_)
         {
             v2_ = new_v;
+            cost_cached = false;
             return true;
         }
 

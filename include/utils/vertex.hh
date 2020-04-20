@@ -39,9 +39,10 @@ namespace Utils
         void FillQ(std::vector<Vertex>& vertices);
         void AddTriangle(Triangle* ref);
         void AddPair(VertexPair* ref);
+        void RemovePair(VertexPair* ref);
         bool CheckPair(const Vertex& v);
 
-        size_t ReplaceBy(Vertex* v);
+        size_t ReplaceBy(Vertex* v, std::vector<VertexPair*>& toDelete);
 
         bool operator==(const Vertex& v) { return index_ == v.index_; }
         bool operator!=(const Vertex& v) { return index_ != v.index_; }

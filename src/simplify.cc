@@ -2,7 +2,7 @@
 
 #include <iostream>
 #include <algorithm>
-#include <set>
+#include <unordered_map>
 
 Utils::VertexPair* MakePair(Utils::Vertex* v1, Utils::Vertex* v2)
 {
@@ -36,65 +36,59 @@ void CreatePair(std::vector<Utils::Vertex>& vertices,
 
 }
 
-bool cmp(Utils::VertexPair* lhs, Utils::VertexPair* rhs)
-{
-    return lhs->GetCost() < rhs->GetCost();
-}
-
 size_t ContractPair(Utils::Heap& h)
-
 {
-    std::cout << "Start Contract \n";
-    auto it = std::min_element(h.vect.begin(), h.vect.end(), cmp);
-    Utils::VertexPair* vp = *it;
-    h.vect.erase(it);
+    auto it = h.Pop(0);
+    Utils::VertexPair* vp = it;
 
-    for (size_t i = 0; i < h.vect.size(); i++)
-    {
-        auto p = h.vect[i];
-        if (p->GetCost() < vp->GetCost())
-            std::cout << "ERROR\n" << p->GetFirst()->GetIndex() << " " << p->GetSecond()->GetIndex() << "\n" << "Cost " << p->GetCost() << " vs " << vp->GetCost() << "\n";
-    }
-
-    std::cout << vp->GetCost() << "\n";
     Utils::Vertex* v1 = vp->GetFirst();
     Utils::Vertex* v2 = vp->GetSecond();
-    std::cout << *v1 << "\n";
-    std::cout << *v2 << "\n";
-
-    if (v1->IsDeleted() || v2->IsDeleted())
-    {
-        std::cout << "AZE\n";
-    }
 
     v1->SetPos(vp->GetOptimalVertex());
-    size_t deleted_triangles = v2->ReplaceBy(v1);
+
+    std::vector<Utils::VertexPair*> toDelete;
+    size_t deleted_triangles = v2->ReplaceBy(v1, toDelete);
+
+    v1->RemovePair(vp);
 
     for (size_t i = 0; i < h.vect.size(); ++i)
     {
-        auto p = h.vect[i];
-        if(p->Replace(v1, v2) && p->GetFirst() == p->GetSecond())
+        Utils::VertexPair* p = h.vect[i];
+        if (std::find(toDelete.begin(), toDelete.end(), p) != toDelete.end())
         {
-            h.vect.erase(h.vect.begin() + i);
-            --i;
+            h.vect.erase(h.vect.begin() + i--);
+            delete p;
         }
+        else
+            p->Replace(v1, v2);
     }
 
-    for (size_t i = 0; i < h.vect.size(); ++i)
-    {
-        auto p = h.vect[i];
-        if (p->GetFirst()->GetIndex() == v1->GetIndex() && p->GetFirst() != v1)
-            std::cout << "ERROR\n";
-        if (p->GetSecond()->GetIndex() == v1->GetIndex() && p->GetSecond() != v1)
-            std::cout << "ERROR\n";
-    }
+    h.Heapify();
 
-    std::set<Utils::VertexPair*> s( h.vect.begin(), h.vect.end() );
-    h.vect.assign( s.begin(), s.end() );
-
-//    delete vp;
+    delete vp;
 
     return deleted_triangles;
+}
+
+void UpdateTriangles(std::vector<Utils::Vertex>& vertices,
+        std::vector<Utils::Triangle>& indexes)
+{
+    std::unordered_map<size_t, size_t> map;
+    size_t new_i = 0;
+    for (size_t i = 0; i < vertices.size(); ++i)
+    {
+        if (vertices[i].IsDeleted())
+            continue;
+
+        map.insert(std::pair<size_t, size_t>(i, new_i++));
+    }
+
+    for (Utils::Triangle& t : indexes)
+    {
+        t.a = map[t.a];
+        t.b = map[t.b];
+        t.c = map[t.c];
+    }
 }
 
 void simplify(std::vector<Utils::Vertex>& vertices,
@@ -112,7 +106,8 @@ void simplify(std::vector<Utils::Vertex>& vertices,
     std::cout << curr_count << " " << target << "\n";
     while (curr_count > target) {
         size_t deleted = ContractPair(h);
-        std::cout << "simplified " << deleted << "\n";
         curr_count -= deleted;
     }
+
+    UpdateTriangles(vertices, indexes);
 }

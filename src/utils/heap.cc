@@ -14,14 +14,15 @@ namespace Utils
         UpdateUp(vect.size() - 1);
     }
 
-    VertexPair* Heap::Pop()
+    VertexPair* Heap::Pop(size_t i)
     {
-        if (vect.size() == 0)
+        if (i >= vect.size())
             return nullptr;
-        VertexPair* temp = vect[0];
-        vect[0] = vect[vect.size() - 1];
+        VertexPair* temp = vect[i];
+        vect[i] = vect[vect.size() - 1];
         vect.pop_back();
-        UpdateDown(0);
+        if (i != vect.size())
+            Update(i);
         return temp;
     }
 
@@ -74,6 +75,13 @@ namespace Utils
                 break;
         }
         return index;
+    }
+
+    void Heap::Heapify()
+    {
+        int index = (vect.size() - 2) / 2;
+        while (index >= 0)
+            UpdateDown(index--);
     }
 
     void Heap::Print()

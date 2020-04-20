@@ -3,8 +3,9 @@
 
 namespace Utils
 {
-    size_t Vertex::ReplaceBy(Vertex* v)
+    size_t Vertex::ReplaceBy(Vertex* v, std::vector<VertexPair*>& toDelete)
     {
+        toDelete.clear();
         deleted_ = true;
         size_t deleted_triangles = 0;
 
@@ -18,6 +19,20 @@ namespace Utils
                 v->AddTriangle(pt);
         }
         v->Q_ += Q_;
+
+        for (auto pp : prefs_)
+        {
+            Vertex* v2 = pp->GetFirst() == this ? pp->GetSecond() : pp->GetFirst();
+            if (*v2 == *v)
+                toDelete.push_back(pp);
+            else if (!v->CheckPair(*v2))
+                v->AddPair(pp);
+            else
+            {
+                v2->RemovePair(pp);
+                toDelete.push_back(pp);
+            }
+        }
 
         return deleted_triangles;
     }
@@ -50,6 +65,15 @@ namespace Utils
     void Vertex::AddPair(VertexPair* ref)
     {
         prefs_.push_back(ref);
+    }
+
+    void Vertex::RemovePair(VertexPair* ref)
+    {
+        auto it = std::find(prefs_.begin(), prefs_.end(), ref);
+        if (it != prefs_.end())
+        {
+            prefs_.erase(it);
+        }
     }
 
     std::ostream& operator<<(std::ostream& out, const Vertex& v)

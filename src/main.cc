@@ -9,7 +9,6 @@
 #include <vector>
 
 
-//TODO Proper parser
 void parse_obj(char* file, std::vector<Utils::Vertex>& vertices,
         std::vector<Utils::Triangle>& indexes)
 {
@@ -47,7 +46,6 @@ void parse_obj(char* file, std::vector<Utils::Vertex>& vertices,
         vertices.push_back(vertex);
      }
 
-    //TODO: assuming 1 shape for now
     for (size_t s = 0; s < shapes.size(); s++)
     {
         size_t index_offset = 0;
@@ -82,7 +80,7 @@ void write_obj(char* file, std::vector<Utils::Vertex>& vertices,
     out << "# " << file << "\n\n";
     out << "o shape\n\n";
     for (Utils::Vertex& v : vertices)
-        //if (!v.IsDeleted())
+        if (!v.IsDeleted())
             out << "v " << v.GetPos() << "\n";
     out << "\n";
     for (Utils::Triangle& t : indexes)
@@ -93,7 +91,6 @@ void write_obj(char* file, std::vector<Utils::Vertex>& vertices,
 
 int main(int argc, char* argv[])
 {
-    //TODO: Add Positional arguments to define target
     if (argc != 4)
     {
         std::cerr << "USAGE: ./meshimator input_file output_file target\n";

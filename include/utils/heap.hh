@@ -11,8 +11,9 @@ namespace Utils
         ~Heap();
 
         void Insert(VertexPair* vp);
-        VertexPair* Pop();
+        VertexPair* Pop(size_t i);
         void Update(size_t index);
+        void Heapify();
         void Print();
 
         std::vector<VertexPair*> vect;
