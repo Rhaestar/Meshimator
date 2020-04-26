@@ -4,6 +4,8 @@
 #include <algorithm>
 #include <unordered_map>
 
+#define MINDIST 0.01
+
 Utils::VertexPair* MakePair(Utils::Vertex* v1, Utils::Vertex* v2)
 {
     if (!v1->CheckPair(*v2))
@@ -16,7 +18,7 @@ Utils::VertexPair* MakePair(Utils::Vertex* v1, Utils::Vertex* v2)
     return nullptr;
 }
 
-void CreatePair(std::vector<Utils::Vertex>& vertices,
+void CreateConnectedPair(std::vector<Utils::Vertex>& vertices,
         Utils::Triangle& index, Utils::Heap& pairs)
 {
     Utils::Vertex* a = &vertices[index.a];
@@ -34,6 +36,23 @@ void CreatePair(std::vector<Utils::Vertex>& vertices,
     if (bc != nullptr)
         pairs.Insert(bc);
 
+}
+
+void CreateDisconnectedPair(std::vector<Utils::Vertex>& vertices, Utils::Heap& pairs) {
+    for (size_t i = 0; i < vertices.size() - 1; i++) {
+        for (size_t j = i + 1; j < vertices.size(); j++) {
+            
+            Utils::Vertex* v1 = &vertices[i];
+            Utils::Vertex* v2 = &vertices[j];
+            Utils::VertexPair* pair = nullptr;
+
+            if (v1->GetPos().SquareDist(v2->GetPos()) < MINDIST)
+                pair = MakePair(&vertices[i], &vertices[j]);
+
+            if (pair != nullptr)
+                pairs.Insert(pair);
+        }
+    }
 }
 
 size_t ContractPair(Utils::Heap& h)
@@ -100,7 +119,9 @@ void simplify(std::vector<Utils::Vertex>& vertices,
     Utils::Heap h;
 
     for (Utils::Triangle& index : indexes)
-        CreatePair(vertices, index, h);
+        CreateConnectedPair(vertices, index, h);
+
+    CreateDisconnectedPair(vertices, h);
 
     size_t curr_count = indexes.size();
     std::cout << curr_count << " " << target << "\n";
