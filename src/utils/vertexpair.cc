@@ -19,6 +19,9 @@ namespace Utils
             return true;
         }
 
+        if (*v1_ == *new_v || *v2_ == *new_v)
+            cost_cached = false;
+
         return false;
     }
 

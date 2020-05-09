@@ -22,6 +22,7 @@ namespace Utils
 
         for (auto pp : prefs_)
         {
+            pp->SetInvalid();
             Vertex* v2 = pp->GetFirst() == this ? pp->GetSecond() : pp->GetFirst();
             if (*v2 == *v)
                 toDelete.push_back(pp);
